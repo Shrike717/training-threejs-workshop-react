@@ -31,10 +31,16 @@ const App = () => {
 			<ambientLight intensity={1} />
 
 			{/* Hier werden die Würfel hinzugefügt */}
-			<Cube position={[-1, 1, 0]} size={[1, 1, 1]} color={'green'} />
-			<Cube position={[1, 1, 0]} size={[1, 1, 1]} color={'hotpink'} />
-			<Cube position={[-1, -1, 0]} size={[1, 1, 1]} color={'orange'} />
-			<Cube position={[1, -1, 0]} size={[1, 1, 1]} color={'blue'} />
+			<group position={[0, 1.5, 0]}>
+				<Cube position={[-1, 1, 0]} size={[1, 1, 1]} color={'green'} />
+				<Cube position={[1, 1, 0]} size={[1, 1, 1]} color={'hotpink'} />
+				<Cube
+					position={[-1, -1, 0]}
+					size={[1, 1, 1]}
+					color={'orange'}
+				/>
+				<Cube position={[1, -1, 0]} size={[1, 1, 1]} color={'blue'} />
+			</group>
 		</Canvas>
 	);
 };
