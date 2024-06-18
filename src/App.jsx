@@ -5,7 +5,12 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import './App.css';
 import { useRef, useState } from 'react';
-import { MeshWobbleMaterial, OrbitControls } from '@react-three/drei';
+import {
+	MeshWobbleMaterial,
+	OrbitControls,
+	useHelper,
+} from '@react-three/drei';
+import { DirectionalLightHelper } from 'three';
 
 // Cube Komponente:
 const Cube = ({ position, size, color }) => {
@@ -140,18 +145,28 @@ const TorusKnot = ({ position, args, color }) => {
 			<torusKnotGeometry args={args} />
 			{/* Hier wird dem Sphere ein Material hinzugefügt */}
 			{/* <meshStandardMaterial color={color} /> */}
-			<MeshWobbleMaterial factor={1} speed={2} />
+			<MeshWobbleMaterial factor={1} speed={2} color={color} />
 		</mesh>
 	);
 };
 
-// Definiert eine React-Komponente
-const App = () => {
+// Scene Komponente:
+// Wir mussten die Szene in eine eigene Komponente auslagern, weil wir sonst den useHelper Hook nicht benutzen können.
+const Scene = () => {
+	// Das ist die Referenz, die wir für unser Helper für das directionalLight brauchen:
+	const directionalLightRef = useRef();
+
+	// Das ist der Hawk Use Helpers, den wir brauchen, um die Helper für das directionalLight zu erstellen:
+	useHelper(directionalLightRef, DirectionalLightHelper, 0.5, 'white');
+
 	return (
-		// Erstellt ein 3D-Canvas. Hier wird die 3D-Szene gerendert.
-		<Canvas>
+		<>
 			{/* Hier fügen werde Szene eine direkte Beleuchtung hinzu */}
-			<directionalLight position={[0, 0, 2]} intensity={1} />
+			<directionalLight
+				position={[0, 1, 2]}
+				intensity={1}
+				ref={directionalLightRef}
+			/>
 
 			{/* Hier fügen werde Szene eine indirekte Beleuchtung hinzu */}
 			<ambientLight intensity={0.7} />
@@ -184,12 +199,23 @@ const App = () => {
 			{/* Hier wird der TorusKnot hinzugefügt */}
 			<TorusKnot
 				position={[0, 0, 0]} // Position des TorusKnot
-				args={[0.8, 0.15, 1000, 50]} // Argumente für den TorusKnot: [Radius, Rohrdurchmesser, radiale Segmente, tubulare Segmente]
+				args={[0.6, 0.1, 1000, 50]} // Argumente für den TorusKnot: [Radius, Rohrdurchmesser, radiale Segmente, tubulare Segmente]
 				color={'hotpink'} // Farbe des TorusKnot
 			/>
 
 			{/* Dieses Element kommt von Drei und bewirkt, dass wir das Objekt quasi anfassen und bewegen können. */}
 			<OrbitControls enableZoom={true} />
+		</>
+	);
+};
+
+// Definiert eine React-Komponente
+const App = () => {
+	return (
+		// Erstellt ein 3D-Canvas. Hier wird die 3D-Szene gerendert.
+		<Canvas>
+			{/* Hier wird die Szene gerendert */}
+			<Scene />
 		</Canvas>
 	);
 };
