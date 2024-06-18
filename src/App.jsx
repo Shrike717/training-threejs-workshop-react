@@ -5,6 +5,7 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import './App.css';
 import { useRef, useState } from 'react';
+import { MeshWobbleMaterial, OrbitControls } from '@react-three/drei';
 
 // Cube Komponente:
 const Cube = ({ position, size, color }) => {
@@ -122,15 +123,15 @@ const TorusKnot = ({ position, args, color }) => {
 	const ref = useRef();
 
 	// Das ist der Hook useFrame, den wir zum animieren brauchen:
-	useFrame((state, delta) => {
-		// Hier wird die Animation definiert
-		// Wir rotieren den Sphere
-		ref.current.rotation.x += delta;
-		ref.current.rotation.y += delta * 2;
-		// Hier bewegen wir den Sphere:
-		// ref.current.position.z += delta; // Bewegt den Sphere in Richtung der Z-Achse und eer veschwindet aus dem Sichtfeld
-		ref.current.position.z = Math.sin(state.clock.getElapsedTime()) * 2; // Bewegt den Sphere in Richtung der Z-Achse und wieder zurück
-	});
+	// useFrame((state, delta) => {
+	// 	// Hier wird die Animation definiert
+	// 	// Wir rotieren den Sphere
+	// 	ref.current.rotation.x += delta;
+	// 	ref.current.rotation.y += delta * 2;
+	// 	// Hier bewegen wir den Sphere:
+	// 	// ref.current.position.z += delta; // Bewegt den Sphere in Richtung der Z-Achse und eer veschwindet aus dem Sichtfeld
+	// 	ref.current.position.z = Math.sin(state.clock.getElapsedTime()) * 2; // Bewegt den Sphere in Richtung der Z-Achse und wieder zurück
+	// });
 	return (
 		// Erstellt eine 3D-Szene
 		<mesh position={position} ref={ref}>
@@ -138,7 +139,8 @@ const TorusKnot = ({ position, args, color }) => {
 			{/* Hier wird ein Sphere erstellt */}
 			<torusKnotGeometry args={args} />
 			{/* Hier wird dem Sphere ein Material hinzugefügt */}
-			<meshStandardMaterial color={color} />
+			{/* <meshStandardMaterial color={color} /> */}
+			<MeshWobbleMaterial factor={1} speed={2} />
 		</mesh>
 	);
 };
@@ -170,7 +172,7 @@ const App = () => {
 			{/* <Cube position={[0, 0, 0]} size={(1, 1, 1)} color={'orange'} /> */}
 
 			{/* Hier wird die Sphere hinzugefügt */}
-			<Sphere position={[0, 0, 0]} args={[2, 30, 30]} color={'orange'} />
+			{/* <Sphere position={[0, 0, 0]} args={[2, 30, 30]} color={'orange'} /> */}
 
 			{/* Hier wird der Torus hinzugefügt */}
 			{/* <Torus
@@ -180,11 +182,14 @@ const App = () => {
 			/> */}
 
 			{/* Hier wird der TorusKnot hinzugefügt */}
-			{/* <TorusKnot
-				position={[-2.4, 0, 0]} // Position des TorusKnot
-				args={[0.6, 0.15, 1000, 50]} // Argumente für den TorusKnot: [Radius, Rohrdurchmesser, radiale Segmente, tubulare Segmente]
+			<TorusKnot
+				position={[0, 0, 0]} // Position des TorusKnot
+				args={[0.8, 0.15, 1000, 50]} // Argumente für den TorusKnot: [Radius, Rohrdurchmesser, radiale Segmente, tubulare Segmente]
 				color={'hotpink'} // Farbe des TorusKnot
-			/> */}
+			/>
+
+			{/* Dieses Element kommt von Drei und bewirkt, dass wir das Objekt quasi anfassen und bewegen können. */}
+			<OrbitControls enableZoom={true} />
 		</Canvas>
 	);
 };
